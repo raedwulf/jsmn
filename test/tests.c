@@ -367,10 +367,12 @@ int test_unmatched_brackets(void) {
 	check(parse(js, JSMN_ERROR_INVAL, 3));
 	js = "\"key 1\"}: 1234";
 	check(parse(js, JSMN_ERROR_INVAL, 3));
+#ifndef JSMN_STRICT
 	js = "\"key {1\": 1234";
 	check(parse(js, 2, 2,
 				JSMN_STRING, "key {1", 1,
 				JSMN_PRIMITIVE, "1234"));
+#endif
 	js = "{{\"key 1\": 1234}";
 	check(parse(js, JSMN_ERROR_PART, 4));
 	return 0;
