@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include "../jsmn.h"
 #include "../jsmn_iterator.h"
 
@@ -276,7 +277,7 @@ int main(int argc, char *argv[])
 {
   jsmn_parser p;
 
-  uint jsmn_tokens_size = 100000;
+  uint32_t jsmn_tokens_size = 100000;
   jsmntok_t *jsmn_tokens = NULL;
 
   int nJSParse;
@@ -334,7 +335,7 @@ int main(int argc, char *argv[])
     goto error_out;
   }
   fprintf(stderr, "Success parsing %d tokens\r\n", nJSParse);
-  fprintf(stderr, "Memusage: %dkb (%d%%)\r\n", (sizeof(jsmntok_t) * (uint)nJSParse / 1024), ((100 * (uint)nJSParse) / jsmn_tokens_size));
+  fprintf(stderr, "Memusage: %dkb (%d%%)\r\n", (sizeof(jsmntok_t) * (uint32_t)nJSParse / 1024), ((100 * (uint32_t)nJSParse) / jsmn_tokens_size));
 
 
   /* Different print methods */
