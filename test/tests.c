@@ -23,6 +23,10 @@ int test_object(void) {
 				JSMN_OBJECT, 0, 7, 1,
 				JSMN_STRING, "a", 1,
 				JSMN_PRIMITIVE, "0"));
+	check(parse("{\"a\":0,}", 3, 3,
+				JSMN_OBJECT, 0, 8, 1,
+				JSMN_STRING, "a", 1,
+				JSMN_PRIMITIVE, "0"));
 	check(parse("{\"a\":[]}", 3, 3,
 				JSMN_OBJECT, 0, 8, 1,
 				JSMN_STRING, "a", 1,
@@ -72,6 +76,9 @@ int test_array(void) {
 	check(parse("[10]", 2, 2,
 				JSMN_ARRAY, -1, -1, 1,
 				JSMN_PRIMITIVE, "10"));
+	check(parse("[10,]", 2, 2,
+				JSMN_ARRAY, -1, -1, 1,
+				JSMN_PRIMITIVE, "10"));
 	check(parse("{\"a\": 1]", JSMN_ERROR_INVAL, 3));
 	/* FIXME */
 	/*check(parse("[\"a\": 1]", JSMN_ERROR_INVAL, 3));*/
@@ -107,6 +114,14 @@ int test_string(void) {
 				JSMN_OBJECT, -1, -1, 1,
 				JSMN_STRING, "strVar", 1,
 				JSMN_STRING, "hello world", 0));
+	check(parse("{'strVar' : \"hello world\"}", 3, 3,
+				JSMN_OBJECT, -1, -1, 1,
+				JSMN_STRING, "strVar", 1,
+				JSMN_STRING, "hello world", 0));
+	check(parse("{\"strVar\" : 'hello world'}", 3, 3,
+				JSMN_OBJECT, -1, -1, 1,
+				JSMN_STRING, "strVar", 1,
+				JSMN_STRING, "hello world", 0));
 	check(parse("{\"strVar\" : \"escapes: \\/\\r\\n\\t\\b\\f\\\"\\\\\"}", 3, 3,
 				JSMN_OBJECT, -1, -1, 1,
 				JSMN_STRING, "strVar", 1,
@@ -133,6 +148,13 @@ int test_string(void) {
 				JSMN_ARRAY, -1, -1, 1,
 				JSMN_STRING, "\\u0280", 0));
 
+	/* FIXME */
+	check(parse("\"a'", JSMN_ERROR_PART, 1));
+#ifndef JSMN_STRICT
+	check(parse("{\"strVar' : \"hello world\"}", JSMN_ERROR_NOMEM, 3));
+#else
+	check(parse("{\"strVar' : \"hello world\"}", JSMN_ERROR_INVAL, 3));
+#endif
 	check(parse("{\"a\":\"str\\uFFGFstr\"}", JSMN_ERROR_INVAL, 3));
 	check(parse("{\"a\":\"str\\u@FfF\"}", JSMN_ERROR_INVAL, 3));
 	check(parse("{{\"a\":[\"\\u028\"]}", JSMN_ERROR_INVAL, 4));
